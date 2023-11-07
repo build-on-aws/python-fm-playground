@@ -2,4 +2,4 @@
 .vscode/
 __pycache__/
 
-backend/venv/
+**/venv/
