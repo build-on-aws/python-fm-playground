@@ -20,7 +20,6 @@ export default function TextContainer() {
     }
 
     const setPrompt = (newPrompt) => {
-        const { prompt, ...rest } = payload;
         setPayload({ 
             prompt: newPrompt, 
             temperature: payload.temperature,
