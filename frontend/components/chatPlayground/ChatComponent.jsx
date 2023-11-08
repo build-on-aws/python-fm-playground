@@ -1,9 +1,9 @@
 "use client";
 
-import Human from "@/components/chat/Human";
+import Human from "@/components/chatPlayground/Human";
 import React, { useState } from "react";
-import Assistant from "@/components/chat/Assistant";
-import Loader from "@/components/chat/Loader";
+import Assistant from "@/components/chatPlayground/Assistant";
+import Loader from "@/components/chatPlayground/Loader";
 import GlobalConfig from "@/app/app.config";
 
 export default function ChatContainer() {

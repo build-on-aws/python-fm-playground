@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Spinner from "@/components/Spinner";
-import StyleSelector from "@/components/image/StyleSelector";
+import StyleSelector from "@/components/imagePlayground/StyleSelector";
 import GlobalConfig from "@/app/app.config";
 
 export default function ImageContainer() {

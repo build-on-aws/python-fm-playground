@@ -1,7 +1,7 @@
 "use client"
 
 import React, {useEffect, useState} from "react";
-import ModelDetails from "@/components/models/ModelDetails";
+import ModelDetails from "@/components/foundationModels/ModelDetails";
 import GlobalConfig from "@/app/app.config";
 
 export default function Model({params: {modelId}}) {
