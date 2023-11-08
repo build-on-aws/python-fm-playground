@@ -8,15 +8,14 @@ import { defaultModel } from "../shared/textModels";
 import NumericInput from "./NumericInput";
 
 export default function TextContainer() {
-    const defaultPayload = { 
+    const defaultPayload = {
         prompt: "", 
-        temperature: { min: 0, max: 1, value: 0.8 },
-        maxTokens: { min: 85, max: 2048, value: 300 } 
+        temperature: defaultModel.temperatureRange.default,
+        maxTokens: defaultModel.maxTokenRange.default
     }
-
     const [isLoading, setIsLoading] = useState(false);
     const [payload, setPayload] = useState(defaultPayload);
-    const [model, setModel] = useState(defaultModel);
+    const [selectedModel, setSelectedModel] = useState(defaultModel);
 
     const setPrompt = (newPrompt) => {
         const { prompt, ...rest } = payload;
@@ -34,7 +33,7 @@ export default function TextContainer() {
     };
 
     const onModelChange = (newModel) => {
-        setModel(newModel);
+        setSelectedModel(newModel);
         setPrompt("");
     }
 
@@ -65,14 +64,14 @@ export default function TextContainer() {
 
         setIsLoading(true);
 
-        const endpoint = `/foundation-models/model/text/${model.modelId}/invoke`;
+        const endpoint = `/foundation-models/model/text/${selectedModel.modelId}/invoke`;
         const api = `${GlobalConfig.apiHost}:${GlobalConfig.apiPort}${endpoint}`;
 
         try {
             const body = JSON.stringify({
                 prompt: payload.prompt,
-                temperature: payload.temperature.value,
-                maxTokens: payload.maxTokens.value
+                temperature: payload.temperature,
+                maxTokens: payload.maxTokens,
             });
 
             const response = await fetch(api, {
@@ -86,7 +85,7 @@ export default function TextContainer() {
             }
 
             await response.json().then(data => {
-                if (model.modelId === "anthropic.claude-v2") {
+                if (selectedModel.modelId === "anthropic.claude-v2") {
                     setPrompt(`Human: ${payload.prompt}\n\nAssistant: ${data.completion}\n\nHuman: `)
                 } else {
                     setPrompt(`${payload.prompt}\n\n${data.completion}\n\n`)
@@ -104,7 +103,7 @@ export default function TextContainer() {
         <div className="flex flex-col flex-auto h-full p-6">
             <h3 className="text-3xl font-medium text-gray-700">Text Playground</h3>
             <div className="flex flex-col flex-shrink-0 rounded-2xl bg-gray-100 p-4 mt-8">
-                <ModelSelector model={model} onModelChange={onModelChange} />
+                <ModelSelector model={selectedModel} onModelChange={onModelChange} />
                 <Textarea 
                     value={payload.prompt} 
                     disabled={isLoading}
@@ -124,6 +123,7 @@ export default function TextContainer() {
                                 className="relative w-14"
                                 placeholder="0.8"
                                 value={payload.temperature}
+                                range={selectedModel.temperatureRange}
                                 disabled={isLoading}
                                 callback={handleTemperatureChange}
                             />
@@ -140,6 +140,7 @@ export default function TextContainer() {
                                 className="relative w-20"
                                 placeholder="300"
                                 value={payload.maxTokens}
+                                range={selectedModel.maxTokenRange}
                                 disabled={isLoading}
                                 callback={handleMaxTokensChange}
                             />

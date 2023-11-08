@@ -1,28 +1,24 @@
 "use client";
 
-export default function NumericInput({ value, placeholder, disabled, callback, className}) {
-
-    const minValue = value.min;
-    const maxValue = value.max;
-    const currentValue = value.value;
+export default function NumericInput({ value, range, placeholder, disabled, callback, className}) {
 
     const handleValueChange = (e) => {
-        let value = e.target.value;
+        let newValue = e.target.value;
 
-        if (isNaN(value)) { value = ""; } 
-        else if (value > maxValue) { value = maxValue; }
+        if (isNaN(newValue)) { newValue = ""; } 
+        else if (newValue > range.max) { newValue = range.max; }
         
-        callback({ min: minValue, max: maxValue, value: value });
+        callback(newValue);
     };
 
     const handleValueBlur = (e) => {
-        let value = e.target.value;
+        let newValue = e.target.value;
 
-        if (isNaN(value) || value === "") { value = placeholder; }
-        else if (value < minValue) { value = minValue; }
-        else if (value > maxValue) { value = maxValue; }
+        if (isNaN(newValue) || newValue === "") { newValue = placeholder; }
+        else if (newValue < range.min) { newValue = range.min; }
+        else if (newValue > range.max) { newValue = range.max; }
         
-        callback({ min: minValue, max: maxValue, value: value });
+        callback(newValue);
     };
 
     return (
@@ -30,7 +26,7 @@ export default function NumericInput({ value, placeholder, disabled, callback, c
             <input
                 className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                 type="text"
-                value={currentValue}
+                value={value}
                 placeholder={placeholder}
                 disabled={disabled}
                 onChange={handleValueChange}
