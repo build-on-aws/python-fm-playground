@@ -5,13 +5,20 @@ import GlobalConfig from "@/app/app.config"
 import ModelSelector from "./ModelSelector";
 
 export default function TextContainer() {
-    const [inputValue, setInputValue] = useState("");
+    const defaultModel = {
+        modelName: "Anthropic Claude V2",
+        modelId: "anthropic.claude-v2",
+    };
+
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedModel, setSelectedModel] = useState(defaultModel);
+    const [inputValue, setInputValue] = useState("");
     const [temperatureValue, setTemperatureValue] = useState(0.8);
     const [maxTokensValue, setMaxTokensValue] = useState(300);
 
     const onModelChange = (newModel) => {
-        console.log('Model changed to:', newModel);
+        setSelectedModel(newModel);
+        setInputValue("");
     }
 
     const handleInputChange = (e) => {
@@ -83,7 +90,7 @@ export default function TextContainer() {
 
         setIsLoading(true);
 
-        const endpoint = "/foundation-models/model/text/anthropic.claude-v2/invoke";
+        const endpoint = `/foundation-models/model/text/${selectedModel.modelId}/invoke`;
         const api = `${GlobalConfig.apiHost}:${GlobalConfig.apiPort}${endpoint}`;
 
         try {
@@ -105,7 +112,11 @@ export default function TextContainer() {
             }
 
             await response.json().then(data => {
-                setInputValue(inputValue => inputValue + "\n\nAssistant: " + data.completion + "\n\n")
+                if (selectedModel.modelId === "anthropic.claude-v2") {
+                    setInputValue(inputValue => `${inputValue}\n\nAssistant: ${data.completion}\n\n`)
+                } else {
+                    setInputValue(inputValue => `${inputValue}\n\n${data.completion}\n\n`)
+                }
             });
 
         } catch (error) {
@@ -117,7 +128,7 @@ export default function TextContainer() {
 
     return (
         <div className="flex flex-col flex-auto h-full p-6">
-            <ModelSelector onModelChange={ onModelChange } />
+            <ModelSelector model={selectedModel} onModelChange={onModelChange} />
             <h3 className="text-3xl font-medium text-gray-700">Text Playground (Anthropic Claude V2)</h3>
             <div className="flex flex-col flex-shrink-0 rounded-2xl bg-gray-100 p-4 mt-8">
                 <div className="flex flex-col h-full overflow-x-auto mb-4">

@@ -1,16 +1,14 @@
 import React, {useState} from "react";
 
-export default function ModelSelector({ onModelChange }) {
-    const defaultModel = {
-        modelName: "Anthropic Claude V2",
-        modelId: "anthropic.claude-v2",
-    };
-
+export default function ModelSelector({ model, onModelChange }) {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedModel, setSelectedModel] = useState(defaultModel);
+    const [selectedModel, setSelectedModel] = useState(model);
 
     const models = [
-        defaultModel,
+        {
+            modelName: "Anthropic Claude V2",
+            modelId: "anthropic.claude-v2",
+        },
         {
             modelName: "AI21 Labs Jurassic-2",
             modelId: "ai21.j2-mid-v1",
