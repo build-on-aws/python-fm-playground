@@ -2,14 +2,10 @@
 
 import React, { useState } from "react";
 import GlobalConfig from "@/app/app.config"
-import ModelSelector from "./ModelSelector";
+import ModelSelector from "../shared/TextModelSelector";
+import { defaultModel } from "../shared/textModels";
 
 export default function TextContainer() {
-    const defaultModel = {
-        modelName: "Anthropic Claude V2",
-        modelId: "anthropic.claude-v2",
-    };
-
     const [isLoading, setIsLoading] = useState(false);
     const [selectedModel, setSelectedModel] = useState(defaultModel);
     const [inputValue, setInputValue] = useState("");

@@ -1,19 +1,11 @@
+"use client"
+
 import React, {useState} from "react";
+import { models } from './textModels';
 
 export default function ModelSelector({ model, onModelChange }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedModel, setSelectedModel] = useState(model);
-
-    const models = [
-        {
-            modelName: "Anthropic Claude V2",
-            modelId: "anthropic.claude-v2",
-        },
-        {
-            modelName: "AI21 Labs Jurassic-2",
-            modelId: "ai21.j2-mid-v1",
-        }
-    ];
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -23,7 +15,7 @@ export default function ModelSelector({ model, onModelChange }) {
         setSelectedModel(item);
         setIsOpen(false);
         onModelChange(item);
-    }
+    };
 
     return (
         <div className="w-64 mb-4">
