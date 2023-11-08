@@ -2,12 +2,17 @@
 
 import React, { useState } from "react";
 import GlobalConfig from "@/app/app.config"
+import ModelSelector from "./ModelSelector";
 
 export default function TextContainer() {
     const [inputValue, setInputValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [temperatureValue, setTemperatureValue] = useState(0.8);
     const [maxTokensValue, setMaxTokensValue] = useState(300);
+
+    const onModelChange = (newModel) => {
+        console.log('Model changed to:', newModel);
+    }
 
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
@@ -110,94 +115,97 @@ export default function TextContainer() {
         }
     };
 
-    return <div className="flex flex-col flex-auto h-full p-6">
-        <h3 className="text-3xl font-medium text-gray-700">Text Playground (Anthropic Claude V2)</h3>
-        <div className="flex flex-col flex-shrink-0 rounded-2xl bg-gray-100 p-4 mt-8">
-            <div className="flex flex-col h-full overflow-x-auto mb-4">
-                <div className="flex flex-col h-full">
-                    <div className="mb-4 w-full bg-gray-50 rounded-lg border border-gray-200">
-                        <div className="p-0 bg-white rounded-xl">
-                            <textarea id="input" rows="20"
-                                      disabled={isLoading}
-                                      value={inputValue}
-                                      onChange={handleInputChange}
-                                      className="block p-4 w-full text-sm text-gray-800 bg-white"
-                                      placeholder="Write something..." required>
-                            </textarea>
+    return (
+        <div className="flex flex-col flex-auto h-full p-6">
+            <ModelSelector onModelChange={ onModelChange } />
+            <h3 className="text-3xl font-medium text-gray-700">Text Playground (Anthropic Claude V2)</h3>
+            <div className="flex flex-col flex-shrink-0 rounded-2xl bg-gray-100 p-4 mt-8">
+                <div className="flex flex-col h-full overflow-x-auto mb-4">
+                    <div className="flex flex-col h-full">
+                        <div className="mb-4 w-full bg-gray-50 rounded-lg border border-gray-200">
+                            <div className="p-0 bg-white rounded-xl">
+                                <textarea id="input" rows="20"
+                                        disabled={isLoading}
+                                        value={inputValue}
+                                        onChange={handleInputChange}
+                                        className="block p-4 w-full text-sm text-gray-800 bg-white"
+                                        placeholder="Write something..." required>
+                                </textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
                 <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
-                    <div className="">
-                        <div className="relative w-full">
-                            <label htmlFor="temperature">
-                                Temperature:
-                            </label>
+                    <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
+                        <div className="">
+                            <div className="relative w-full">
+                                <label htmlFor="temperature">
+                                    Temperature:
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div className="ml-4">
-                        <div className="relative w-14">
-                            <input
-                                placeholder="0.8"
-                                id="temperature"
-                                type="text"
-                                value={temperatureValue}
-                                onChange={handleTemperatureValueChange}
-                                onBlur={handleTemperatureValueBlur}
-                                className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
-                            />
+                        <div className="ml-4">
+                            <div className="relative w-14">
+                                <input
+                                    placeholder="0.8"
+                                    id="temperature"
+                                    type="text"
+                                    value={temperatureValue}
+                                    onChange={handleTemperatureValueChange}
+                                    onBlur={handleTemperatureValueBlur}
+                                    className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+                                />
 
+                            </div>
                         </div>
-                    </div>
-                    <div className="ml-8">
-                        <div className="relative">
-                            <label htmlFor="tokens">
-                                Max. length:
-                            </label>
+                        <div className="ml-8">
+                            <div className="relative">
+                                <label htmlFor="tokens">
+                                    Max. length:
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div className="ml-4">
-                        <div className="relative w-20">
-                            <input
-                                placeholder="300"
-                                id="tokens"
-                                type="text"
-                                value={maxTokensValue}
-                                onChange={handleMaxTokensValueChange}
-                                onBlur={handleMaxTokensValueBlur}
-                                className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
-                            />
+                        <div className="ml-4">
+                            <div className="relative w-20">
+                                <input
+                                    placeholder="300"
+                                    id="tokens"
+                                    type="text"
+                                    value={maxTokensValue}
+                                    onChange={handleMaxTokensValueChange}
+                                    onBlur={handleMaxTokensValueBlur}
+                                    className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+                                />
 
+                            </div>
                         </div>
-                    </div>
-                    <div className="ml-4 ml-auto">
-                        <button
-                            type="button"
-                            disabled={isLoading}
-                            onClick={sendMessage}
-                            className={getButtonClass()}>
-                            <span>Send</span>
-                            <span className="ml-2">
-                            <svg
-                                className="w-4 h-4 transform rotate-45 -mt-px"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                              <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
-                              </path>
-                            </svg>
-                        </span>
-                        </button>
+                        <div className="ml-4 ml-auto">
+                            <button
+                                type="button"
+                                disabled={isLoading}
+                                onClick={sendMessage}
+                                className={getButtonClass()}>
+                                <span>Send</span>
+                                <span className="ml-2">
+                                <svg
+                                    className="w-4 h-4 transform rotate-45 -mt-px"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
+                                </path>
+                                </svg>
+                            </span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    )
 };
