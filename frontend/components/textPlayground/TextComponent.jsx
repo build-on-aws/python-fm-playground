@@ -3,72 +3,51 @@
 import React, { useState } from "react";
 import GlobalConfig from "@/app/app.config"
 import ModelSelector from "../shared/TextModelSelector";
+import Textarea from "./Textarea";
 import { defaultModel } from "../shared/textModels";
+import NumericInput from "./NumericInput";
 
 export default function TextContainer() {
+    const defaultPayload = { 
+        prompt: "", 
+        temperature: { min: 0, max: 1, value: 0.8 },
+        maxTokens: { min: 85, max: 2048, value: 300 } 
+    }
+
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedModel, setSelectedModel] = useState(defaultModel);
-    const [inputValue, setInputValue] = useState("");
-    const [temperatureValue, setTemperatureValue] = useState(0.8);
-    const [maxTokensValue, setMaxTokensValue] = useState(300);
+    const [payload, setPayload] = useState(defaultPayload);
+    const [model, setModel] = useState(defaultModel);
+
+    const setPrompt = (newPrompt) => {
+        const { prompt, ...rest } = payload;
+        setPayload({ prompt: newPrompt, ...rest });
+    }
+
+    const setTemperature = (newTemperature) => {
+        const { temperature, ...rest } = payload;
+        setPayload({ temperature: newTemperature, ...rest });
+    }
+
+    const setMaxTokens = (newMaxTokens) => {
+        const { maxTokens, ...rest } = payload;
+        setPayload({ maxTokens: newMaxTokens, ...rest });
+    };
 
     const onModelChange = (newModel) => {
-        setSelectedModel(newModel);
-        setInputValue("");
+        setModel(newModel);
+        setPrompt("");
     }
 
-    const handleInputChange = (e) => {
-        setInputValue(e.target.value);
+    const handlePromptChange = (e) => { 
+        setPrompt(e.target.value); 
     };
 
-    const handleTemperatureValueChange = (e) => {
-        let value = e.target.value;
-
-        if (isNaN(value)) {
-            value = "";
-        } else if (value > 1) {
-            value = 1;
-        }
-
-        setTemperatureValue(value);
-    }
-
-    const handleTemperatureValueBlur = (e) => {
-        let value = e.target.value;
-
-        if (isNaN(value) || value === "") {
-            value = 0.8;
-        } else if (value > 1) {
-            value = 1;
-        }
-
-        setTemperatureValue(value);
-    }
-
-    const handleMaxTokensValueChange = (e) => {
-        let value = e.target.value;
-
-        if (isNaN(value)) {
-            value = maxTokensValue;
-        } else if (value > 2048) {
-            value = 2048;
-        }
-
-        setMaxTokensValue(value);
+    const handleTemperatureChange = (value) => {
+        setTemperature(value);
     };
 
-    const handleMaxTokensValueBlur = (e) => {
-        let value = e.target.value;
-
-        if (isNaN(value) || value === "") {
-            value = 300;
-        } else if (value < 85) {
-            value = 85;
-        } else if (value > 2048) {
-            value = 2048;
-        }
-
-        setMaxTokensValue(value);
+    const handleMaxTokensChange = (value) => {
+        setMaxTokens(value);
     };
 
     const isNullOrBlankOrEmpty = (str) => {
@@ -82,20 +61,21 @@ export default function TextContainer() {
     }
 
     const sendMessage = async () => {
-        if (isNullOrBlankOrEmpty(inputValue)) { return; }
+        if (isNullOrBlankOrEmpty(payload.prompt)) { return; }
 
         setIsLoading(true);
 
-        const endpoint = `/foundation-models/model/text/${selectedModel.modelId}/invoke`;
+        const endpoint = `/foundation-models/model/text/${model.modelId}/invoke`;
         const api = `${GlobalConfig.apiHost}:${GlobalConfig.apiPort}${endpoint}`;
 
         try {
-
             const body = JSON.stringify({
-                prompt: inputValue,
-                temperature: temperatureValue,
-                maxTokens: maxTokensValue
+                prompt: payload.prompt,
+                temperature: payload.temperature.value,
+                maxTokens: payload.maxTokens.value
             });
+
+            console.log(body);
 
             const response = await fetch(api, {
                 method: 'POST',
@@ -108,10 +88,10 @@ export default function TextContainer() {
             }
 
             await response.json().then(data => {
-                if (selectedModel.modelId === "anthropic.claude-v2") {
-                    setInputValue(inputValue => `${inputValue}\n\nAssistant: ${data.completion}\n\n`)
+                if (model.modelId === "anthropic.claude-v2") {
+                    setPrompt(`Human: ${payload.prompt}\n\nAssistant: ${data.completion}\n\nHuman: `)
                 } else {
-                    setInputValue(inputValue => `${inputValue}\n\n${data.completion}\n\n`)
+                    setPrompt(`${payload.prompt}\n\n${data.completion}\n\n`)
                 }
             });
 
@@ -126,22 +106,12 @@ export default function TextContainer() {
         <div className="flex flex-col flex-auto h-full p-6">
             <h3 className="text-3xl font-medium text-gray-700">Text Playground</h3>
             <div className="flex flex-col flex-shrink-0 rounded-2xl bg-gray-100 p-4 mt-8">
-            <ModelSelector model={selectedModel} onModelChange={onModelChange} />
-                <div className="flex flex-col h-full overflow-x-auto mb-4">
-                    <div className="flex flex-col h-full">
-                        <div className="mb-4 w-full bg-gray-50 rounded-lg border border-gray-200">
-                            <div className="p-0 bg-white rounded-xl">
-                                <textarea id="input" rows="20"
-                                        disabled={isLoading}
-                                        value={inputValue}
-                                        onChange={handleInputChange}
-                                        className="block p-4 w-full text-sm text-gray-800 bg-white"
-                                        placeholder="Write something..." required>
-                                </textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ModelSelector model={model} onModelChange={onModelChange} />
+                <Textarea 
+                    value={payload.prompt} 
+                    disabled={isLoading}
+                    onChange={handlePromptChange} 
+                />
                 <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
                     <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
                         <div className="">
@@ -152,18 +122,13 @@ export default function TextContainer() {
                             </div>
                         </div>
                         <div className="ml-4">
-                            <div className="relative w-14">
-                                <input
-                                    placeholder="0.8"
-                                    id="temperature"
-                                    type="text"
-                                    value={temperatureValue}
-                                    onChange={handleTemperatureValueChange}
-                                    onBlur={handleTemperatureValueBlur}
-                                    className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
-                                />
-
-                            </div>
+                            <NumericInput
+                                className="relative w-14"
+                                placeholder="0.8"
+                                value={payload.temperature}
+                                disabled={isLoading}
+                                callback={handleTemperatureChange}
+                            />
                         </div>
                         <div className="ml-8">
                             <div className="relative">
@@ -173,19 +138,14 @@ export default function TextContainer() {
                             </div>
                         </div>
                         <div className="ml-4">
-                            <div className="relative w-20">
-                                <input
-                                    placeholder="300"
-                                    id="tokens"
-                                    type="text"
-                                    value={maxTokensValue}
-                                    onChange={handleMaxTokensValueChange}
-                                    onBlur={handleMaxTokensValueBlur}
-                                    className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
-                                />
-
-                            </div>
-                        </div>
+                            <NumericInput 
+                                className="relative w-20"
+                                placeholder="300"
+                                value={payload.maxTokens}
+                                disabled={isLoading}
+                                callback={handleMaxTokensChange}
+                            />
+                              </div>
                         <div className="ml-4 ml-auto">
                             <button
                                 type="button"
