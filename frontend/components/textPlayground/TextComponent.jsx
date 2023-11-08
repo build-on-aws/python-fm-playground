@@ -17,8 +17,6 @@ export default function TextContainer() {
         setPrompt("");
         setTemperature(selectedModel.temperatureRange.default);
         setMaxTokens(selectedModel.maxTokenRange.default);
-        console.log(newModel);
-        console.log(payload);
     }
 
     const setPrompt = (newPrompt) => {
