@@ -15,32 +15,29 @@ export default function TextContainer() {
     const onModelChange = (newModel) => {
         setSelectedModel(newModel);
         setPrompt("");
-        setTemperature(selectedModel.temperatureRange.default);
-        setMaxTokens(selectedModel.maxTokenRange.default);
+        setTemperature(newModel.temperatureRange.default);
+        setMaxTokens(newModel.maxTokenRange.default);
     }
 
     const setPrompt = (newPrompt) => {
-        setPayload({ 
-            prompt: newPrompt, 
-            temperature: payload.temperature,
-            maxTokens: payload.maxTokens
-        });
+        setPayload((prevPayload) => ({
+            ...prevPayload,
+            prompt: newPrompt
+        }));
     }
 
     const setTemperature = (newTemperature) => {
-        setPayload({ 
-            prompt: payload.prompt,
-            temperature: newTemperature,
-            maxTokens: payload.maxTokens
-        });
+        setPayload((prevPayload) => ({
+            ...prevPayload,
+            temperature: newTemperature
+        }));
     }
 
     const setMaxTokens = (newMaxTokens) => {
-        setPayload({ 
-            prompt: payload.prompt,
-            temperature: payload.temperature,
+        setPayload((prevPayload) => ({
+            ...prevPayload,
             maxTokens: newMaxTokens
-        });
+        }));
     };
 
     const handlePromptChange = (e) => { 
@@ -111,7 +108,7 @@ export default function TextContainer() {
             <div className="flex flex-col flex-shrink-0 rounded-2xl bg-gray-100 p-4 mt-8">
                 <TextModelSelector model={selectedModel} onModelChange={onModelChange} />
                 <Textarea 
-                    value={payload.prompt} 
+                    value={payload.prompt}
                     disabled={isLoading}
                     onChange={handlePromptChange} 
                 />
