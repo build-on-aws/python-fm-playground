@@ -2,40 +2,49 @@
 
 import React, { useState } from "react";
 import GlobalConfig from "@/app/app.config"
-import ModelSelector from "../shared/TextModelSelector";
+import TextModelSelector from "../shared/TextModelSelector";
 import Textarea from "./Textarea";
-import { defaultModel } from "../shared/textModels";
+import { defaultModel, defaultPayload } from "../shared/textModels";
 import NumericInput from "./NumericInput";
 
 export default function TextContainer() {
-    const defaultPayload = {
-        prompt: "", 
-        temperature: defaultModel.temperatureRange.default,
-        maxTokens: defaultModel.maxTokenRange.default
-    }
     const [isLoading, setIsLoading] = useState(false);
     const [payload, setPayload] = useState(defaultPayload);
     const [selectedModel, setSelectedModel] = useState(defaultModel);
 
-    const setPrompt = (newPrompt) => {
-        const { prompt, ...rest } = payload;
-        setPayload({ prompt: newPrompt, ...rest });
-    }
-
-    const setTemperature = (newTemperature) => {
-        const { temperature, ...rest } = payload;
-        setPayload({ temperature: newTemperature, ...rest });
-    }
-
-    const setMaxTokens = (newMaxTokens) => {
-        const { maxTokens, ...rest } = payload;
-        setPayload({ maxTokens: newMaxTokens, ...rest });
-    };
-
     const onModelChange = (newModel) => {
         setSelectedModel(newModel);
         setPrompt("");
+        setTemperature(selectedModel.temperatureRange.default);
+        setMaxTokens(selectedModel.maxTokenRange.default);
+        console.log(newModel);
+        console.log(payload);
     }
+
+    const setPrompt = (newPrompt) => {
+        const { prompt, ...rest } = payload;
+        setPayload({ 
+            prompt: newPrompt, 
+            temperature: payload.temperature,
+            maxTokens: payload.maxTokens
+        });
+    }
+
+    const setTemperature = (newTemperature) => {
+        setPayload({ 
+            prompt: payload.prompt,
+            temperature: newTemperature,
+            maxTokens: payload.maxTokens
+        });
+    }
+
+    const setMaxTokens = (newMaxTokens) => {
+        setPayload({ 
+            prompt: payload.prompt,
+            temperature: payload.temperature,
+            maxTokens: newMaxTokens
+        });
+    };
 
     const handlePromptChange = (e) => { 
         setPrompt(e.target.value); 
@@ -103,7 +112,7 @@ export default function TextContainer() {
         <div className="flex flex-col flex-auto h-full p-6">
             <h3 className="text-3xl font-medium text-gray-700">Text Playground</h3>
             <div className="flex flex-col flex-shrink-0 rounded-2xl bg-gray-100 p-4 mt-8">
-                <ModelSelector model={selectedModel} onModelChange={onModelChange} />
+                <TextModelSelector model={selectedModel} onModelChange={onModelChange} />
                 <Textarea 
                     value={payload.prompt} 
                     disabled={isLoading}
@@ -121,7 +130,7 @@ export default function TextContainer() {
                         <div className="ml-4">
                             <NumericInput
                                 className="relative w-14"
-                                placeholder="0.8"
+                                placeholder={selectedModel.temperatureRange.default}
                                 value={payload.temperature}
                                 range={selectedModel.temperatureRange}
                                 disabled={isLoading}
@@ -138,7 +147,7 @@ export default function TextContainer() {
                         <div className="ml-4">
                             <NumericInput 
                                 className="relative w-20"
-                                placeholder="300"
+                                placeholder={selectedModel.maxTokenRange.default}
                                 value={payload.maxTokens}
                                 range={selectedModel.maxTokenRange}
                                 disabled={isLoading}

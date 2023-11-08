@@ -3,7 +3,7 @@
 import React, {useState} from "react";
 import { models } from './textModels';
 
-export default function ModelSelector({ model, onModelChange }) {
+export default function TextModelSelector({ model, onModelChange }) {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {

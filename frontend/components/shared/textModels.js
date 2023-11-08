@@ -4,12 +4,12 @@ export const defaultModel = {
     temperatureRange: {
         min: 0,
         max: 1,
-        default: 0.5
+        default: 0.8
     },
     maxTokenRange: {
         min: 0,
         max: 4096,
-        default: 200
+        default: 300
     }
 }
 
@@ -30,3 +30,9 @@ export const models = [
         }
     }
 ]
+
+export const defaultPayload = {
+    prompt: "", 
+    temperature: defaultModel.temperatureRange.default,
+    maxTokens: defaultModel.maxTokenRange.default
+}
