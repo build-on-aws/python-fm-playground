@@ -34,11 +34,27 @@ Open a terminal, navigate to a directory of your choice, and execute the followi
 git clone https://github.com/build-on-aws/python-fm-playground.git
 ```
 
+### Virtual Environment Setup
+
+It's recommended to use a virtual environment for your Python projects to manage dependencies separately for each project. If you're not already in a virtual environment, navigate to the project directory to create and activate the virtual environment:
+
+```shell
+# Windows:
+cd python-fm-playground
+python -m venv .venv
+.venv\Scripts\activate   
+```
+
+```shell
+# Linux/MacOS
+cd python-fm-playground
+python -m venv .venv
+source .venv/bin/activate  
+```
+
 ### Backend Setup
 
-**Note:** It's a good practice to use a virtual environment for your Python projects to manage dependencies separately for each project. If you're not already in a virtual environment, [you can create one and then install your packages there](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/).
-
-In the `python-fm-playground/backend` directory, run:
+Navigate to the `backend` directory and run:
 
 ```shell
 pip install -r requirements.txt
@@ -73,6 +89,20 @@ In the terminal where the frontend is running, press `Ctrl + C` to terminate the
 ### Stopping the Backend
 
 Similarly, in the backend terminal, use the `Ctrl + C` shortcut to stop the server.
+
+### Deactivating the Virtual Environment
+
+To deactivate the virtual environment, you can simply close the backend terminal, or execute the following command:
+
+```shell
+# Windows:
+.venv\Scripts\deactivate.bat
+```
+
+```shell
+# Linux/MacOS
+deactivate
+```
 
 If you encounter any issues, you can forcefully terminate the processes by finding the process ID (`PID`) and using the `kill` command on Unix-based systems or Task Manager on Windows.
 
