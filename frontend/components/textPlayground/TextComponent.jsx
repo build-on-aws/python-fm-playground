@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import GlobalConfig from "@/app/app.config"
-import TextModelSelector from "../shared/TextModelSelector";
+import TextModelSelector from "./TextModelSelector";
 import Textarea from "./Textarea";
-import { defaultModel, defaultPayload } from "../shared/textModels";
+import { defaultModel, defaultPayload } from "@/helpers/modelData";
 import NumericInput from "./NumericInput";
 
 export default function TextContainer() {
@@ -19,42 +19,23 @@ export default function TextContainer() {
         setMaxTokens(newModel.maxTokenRange.default);
     }
 
-    const setPrompt = (newPrompt) => {
-        setPayload((prevPayload) => ({
-            ...prevPayload,
-            prompt: newPrompt
-        }));
-    }
+    const setPrompt = (newPrompt) => setPayload(
+        (prevPayload) => ({ ...prevPayload, prompt: newPrompt })
+    );
 
-    const setTemperature = (newTemperature) => {
-        setPayload((prevPayload) => ({
-            ...prevPayload,
-            temperature: newTemperature
-        }));
-    }
+    const setTemperature = (newTemperature) => setPayload(
+        (prevPayload) => ({ ...prevPayload, temperature: newTemperature })
+    );
 
-    const setMaxTokens = (newMaxTokens) => {
-        setPayload((prevPayload) => ({
-            ...prevPayload,
-            maxTokens: newMaxTokens
-        }));
-    };
+    const setMaxTokens = (newMaxTokens) => setPayload(
+        (prevPayload) => ({ ...prevPayload, maxTokens: newMaxTokens })
+    );
 
-    const handlePromptChange = (e) => { 
-        setPrompt(e.target.value); 
-    };
+    const handlePromptChange = (e) => setPrompt(e.target.value);
 
-    const handleTemperatureChange = (value) => {
-        setTemperature(value);
-    };
+    const handleTemperatureChange = (value) => setTemperature(value);
 
-    const handleMaxTokensChange = (value) => {
-        setMaxTokens(value);
-    };
-
-    const isNullOrBlankOrEmpty = (str) => {
-        return str == null || str.match(/^ *$/) !== null;
-    }
+    const handleMaxTokensChange = (value) => setMaxTokens(value);
 
     const getButtonClass = () => {
         const inactiveButtonClass = "flex w-[100px] items-center justify-center bg-indigo-300 rounded-xl text-white px-3 py-2 flex-shrink-0";
@@ -63,7 +44,7 @@ export default function TextContainer() {
     }
 
     const sendMessage = async () => {
-        if (isNullOrBlankOrEmpty(payload.prompt)) { return; }
+        if (payload.prompt === null || payload.prompt === undefined || payload.prompt.trim() === "") { return; }
 
         setIsLoading(true);
 
