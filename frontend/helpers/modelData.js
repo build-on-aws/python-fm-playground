@@ -1,5 +1,5 @@
 export const defaultModel = {
-    modelName: "Anthropic Claude V2",
+    modelName: "Anthropic Claude 2",
     modelId: "anthropic.claude-v2",
     temperatureRange: {
         min: 0,

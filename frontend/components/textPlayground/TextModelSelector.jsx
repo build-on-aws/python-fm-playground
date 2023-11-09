@@ -1,7 +1,7 @@
 "use client"
 
 import React, {useState} from "react";
-import { models } from './textModels';
+import { models } from '../../helpers/modelData';
 
 export default function TextModelSelector({ model, onModelChange }) {
     const [isOpen, setIsOpen] = useState(false);

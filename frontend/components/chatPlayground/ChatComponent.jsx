@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import Assistant from "@/components/chatPlayground/Assistant";
 import Loader from "@/components/chatPlayground/Loader";
 import GlobalConfig from "@/app/app.config";
+import ModelIndicator from "@/components/chatPlayground/ModelIndicator";
 
 export default function ChatContainer() {
     const [conversation, setConversation] = useState([]);
@@ -62,8 +63,9 @@ export default function ChatContainer() {
     };
 
     return <div className="flex flex-col flex-auto h-full p-6">
-        <h3 className="text-3xl font-medium text-gray-700">Chat Playground (Anthropic Claude V2)</h3>
+        <h3 className="text-3xl font-medium text-gray-700">Chat Playground</h3>
         <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 p-4 mt-8">
+            <ModelIndicator modelName="Anthropic Claude 2" />
             <div className="flex flex-col h-full overflow-x-auto mb-4">
                 <div className="flex flex-col h-full">
                     <div className="grid grid-cols-12 gap-y-2">
