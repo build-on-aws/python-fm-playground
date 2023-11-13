@@ -44,15 +44,17 @@ git clone https://github.com/build-on-aws/python-fm-playground.git
 
 It is recommended to use a virtual environment for your Python projects to manage dependencies separately for each project. If you're not already in a virtual environment, navigate to the project directory to create and activate the virtual environment:
 
+#### Windows:
+
 ```shell
-# Windows:
 cd python-fm-playground
 python -m venv .venv
 .venv\Scripts\activate   
 ```
 
+#### Linux/MacOS:
+
 ```shell
-# Linux/MacOS
 cd python-fm-playground
 python -m venv .venv
 source .venv/bin/activate  
@@ -85,7 +87,7 @@ INFO:     Uvicorn running on http://0.0.0.0:55500 (Press CTRL+C to quit)
 
 ### Frontend Setup
 
-In a **new terminal window**, navigate to the directory `frontend` and install the packages required by running the following command:
+In a **new terminal window**, navigate to the `frontend` directory and install the packages required by running the following command:
 
 ```shell
 npm install
@@ -132,13 +134,15 @@ Similarly, in the backend terminal, use the `Ctrl + C` shortcut to stop the serv
 
 To deactivate the virtual environment, you can simply close the backend terminal, or execute the following command:
 
+#### Windows:
+
 ```shell
-# Windows:
 .venv\Scripts\deactivate.bat
 ```
 
+#### Linux/MacOS:
+
 ```shell
-# Linux/MacOS
 deactivate
 ```
 
