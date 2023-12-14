@@ -39,7 +39,7 @@ def invoke(prompt, style_preset):
 
     response = bedrock_runtime.invoke_model(
         body=json.dumps(prompt_config),
-        modelId="stability.stable-diffusion-xl"
+        modelId="stability.stable-diffusion-xl-v1"
     )
 
     response_body = json.loads(response["body"].read())
