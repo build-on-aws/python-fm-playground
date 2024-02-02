@@ -16,7 +16,7 @@ def invoke(prompt):
                    """;
 
     prompt_config = {
-        "prompt": f'\n\nHuman: {systemPrompt}\n\n{prompt}\n\nAssistant:',
+        "prompt": f'{systemPrompt}\n\nHuman: {prompt}\n\nAssistant:',
         "max_tokens_to_sample": 1024,
         "temperature": 0.8
     }
